@@ -1,0 +1,49 @@
+[
+  {
+    "ContainingType": "RestApiTemplate.Controllers.FakultetController",
+    "Method": "GetFakultet",
+    "RelativePath": "api/Fakultet",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RestApiTemplate.Controllers.FakultetController",
+    "Method": "InsertNewFakultet",
+    "RelativePath": "api/Fakultet",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "fakultet",
+        "Type": "RestApiTemplate.Models.DTO.AddNewFakultet",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RestApiTemplate.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[RestApiTemplate.WeatherForecast, RestApiTemplate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
+  }
+]
