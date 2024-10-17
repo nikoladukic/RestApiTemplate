@@ -8,7 +8,9 @@ namespace RestApiTemplate.BussinesLogic.Interface
     public interface IRestApiTemplateBussinesLogic
     {
         Task<List<Fakultet>> GetInformtionAboutFakultet();
-        Task<CommandResponse<Fakultet>> GetFakultetById(int id);
+        Task<CommandResponse<Fakultet>> GetFakultetById(long id);
         Task<CommandResponse<Fakultet>> InsertNewFakultet(AddNewFakultet fakultet);
+        Task<CommandResponse<Fakultet>> DeleteFakultetById(long id);
+        Task<CommandResponse<Fakultet>> UpdateFakultet(long id, UpdateFakultet fakultet);
     }
 }

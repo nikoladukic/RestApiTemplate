@@ -10,6 +10,8 @@ namespace RestApiTemplate.Models.Mapper
         {
             CreateMap<AddNewFakultet, Fakultet>()
                 .ForMember(dest => dest.FakultetId, opt => opt.Ignore()); // Ignorišemo FakultetId pri mapiranju
+            CreateMap<UpdateFakultet, Fakultet>()
+                .ForMember(dest => dest.FakultetId, opt => opt.Ignore()); // Ignorišemo FakultetId pri mapiranju
         }
     }
 }

@@ -71,7 +71,7 @@ namespace RestApiTemplate.BussinesLogic
             return response;
         }
 
-        public async Task<CommandResponse<Fakultet>> GetFakultetById(int id)
+        public async Task<CommandResponse<Fakultet>> GetFakultetById(long id)
         {
             CommandResponse<Fakultet> response = new CommandResponse<Fakultet>(200, null, null);
 
@@ -79,10 +79,13 @@ namespace RestApiTemplate.BussinesLogic
 
             try
             {
-                
-                    await _dbContext.Database.ExecuteSqlAsync(_);
+                SqlQueryLoader loader = new SqlQueryLoader("C:\\Users\\ndukic\\source\\repos\\RestApiTemplate\\RestApiTemplate\\Database\\SqlQueryDefinition.json");
+                var sqlDefinitions = loader.LoadSqlDefinition();
+                var commands = sqlDefinitions.Commands["SelectFakultetById"];
+
+               // await _dbContext.Database.ExecuteSqlAsync(_);
                     await _dbContext.SaveChangesAsync();
-                    response.Body = newFakultet;
+                    //response.Body = newFakultet;
                     response.Message = "Uspesno dodat fakultet";
 
 
@@ -94,6 +97,82 @@ namespace RestApiTemplate.BussinesLogic
                 _logger.LogError("Desila se greska u metodi InsertNewFakultet {@error}", ex.StackTrace);
                 response.StatusCode = 500;
                 response.Message = "Desila se greska u metodi InsertNewFakultet";
+                response.Body = null;
+            }
+
+            return response;
+        }
+
+        public async Task<CommandResponse<Fakultet>> DeleteFakultetById(long id)
+        {
+            CommandResponse<Fakultet> response = new CommandResponse<Fakultet>(200, null, null);
+
+
+
+            try
+            {
+
+                Fakultet fakultet = await _dbContext.Fakultet.FindAsync(id);
+                if (fakultet == null)
+                {
+                     response.Message = "Fakultet nije izbrisan"; ; // Ako nije pronađen, vrati false
+                     return response;
+                }
+                else
+                {
+                     _dbContext.Fakultet.Remove(fakultet);
+                    await _dbContext.SaveChangesAsync();
+                }
+
+
+                response.Message = "Fakultet uspeno izbrisan!";
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Desila se greska u metodi DeleteFakultetById {@error}", ex.StackTrace);
+                response.StatusCode = 500;
+                response.Message = "Desila se greska u metodi DeleteFakultetById";
+                response.Body = null;
+            }
+
+            return response;
+        }
+
+        public async Task<CommandResponse<Fakultet>> UpdateFakultet(long id, UpdateFakultet fakultet)
+        {
+            CommandResponse<Fakultet> response = new CommandResponse<Fakultet>(200, null, null);
+
+            try
+            {
+                Fakultet fakultetForUpdate = _dbContext.Fakultet.Find(id);
+                if (fakultetForUpdate == null)
+                {
+                    response.Message = "Fakultet nije pronadjen"; ; // Ako nije pronađen, vrati false
+                    return response;
+                }
+                else
+                {
+                    fakultetForUpdate.Opis = fakultet.Opis;
+                    fakultetForUpdate.Adresa = fakultet.Adresa;
+                    fakultetForUpdate.Ime = fakultet.Ime;
+                        
+
+                    await _dbContext.SaveChangesAsync();
+                }
+
+                response.Message = "Fakultet uspesno updateovan"; ; // Ako nije pronađen, vrati false
+
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Desila se greska u metodi UpdateFakultet {@error}", ex.StackTrace);
+                response.StatusCode = 500;
+                response.Message = "Desila se greska u metodi UpdateFakultet";
                 response.Body = null;
             }
 

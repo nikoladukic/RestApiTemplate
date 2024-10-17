@@ -13,7 +13,7 @@ namespace RestApiTemplate.Controllers
         private readonly IRestApiTemplateBussinesLogic _apiTemplateBussinesLogic;
         private readonly ILogger<FakultetController> _logger;
 
-     
+
         public FakultetController(IRestApiTemplateBussinesLogic apiTemplateBussinesLogic, ILogger<FakultetController> logger)
         {
             _apiTemplateBussinesLogic = apiTemplateBussinesLogic;
@@ -23,10 +23,10 @@ namespace RestApiTemplate.Controllers
         [HttpGet]
         public async Task<IActionResult> GetFakultet()
         {
-           
+
             var fakulteti = await _apiTemplateBussinesLogic.GetInformtionAboutFakultet();
             return Ok(fakulteti);
-            
+
         }
 
         [HttpPost]
@@ -35,17 +35,28 @@ namespace RestApiTemplate.Controllers
             var response = await _apiTemplateBussinesLogic.InsertNewFakultet(fakultet);
             if (response.StatusCode == 200)
                 return Ok(response);
-            else 
-                return StatusCode (response.StatusCode,response.Message);
+            else
+                return StatusCode(response.StatusCode, response.Message);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFakultetByID([FromQuery] long fakultetID)
+        [HttpDelete] 
+        public async Task<IActionResult> DeleteFakultet([FromQuery] long id)
         {
+            var response = await _apiTemplateBussinesLogic.DeleteFakultetById(id);
+            if (response.StatusCode == 200)
+                return Ok(response);
+            else
+                return StatusCode(response.StatusCode, response.Message);
+        }
 
-            var fakulteti = await _apiTemplateBussinesLogic.GetFakultetById();
-            return Ok(fakulteti);
-
+        [HttpPost("{id}")]
+        public async Task<IActionResult> UpdateFakultet(long id,[FromBody] UpdateFakultet fakultet)
+        {
+            var response = await _apiTemplateBussinesLogic.UpdateFakultet(id,fakultet);
+            if (response.StatusCode == 200)
+                return Ok(response);
+            else
+                return StatusCode(response.StatusCode, response.Message);
         }
 
     }
