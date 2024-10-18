@@ -61,5 +61,31 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RestApiTemplate.Controllers.MestoController",
+    "Method": "GetAllMesta",
+    "RelativePath": "api/Mesto",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RestApiTemplate.Controllers.MestoController",
+    "Method": "InsertNewMesto",
+    "RelativePath": "api/Mesto",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "mesto",
+        "Type": "RestApiTemplate.Models.Domain.Mesto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

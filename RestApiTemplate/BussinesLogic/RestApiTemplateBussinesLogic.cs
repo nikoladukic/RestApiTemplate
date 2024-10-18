@@ -23,7 +23,9 @@ namespace RestApiTemplate.BussinesLogic
             _mapper = mapper;
         }
 
-       
+       /**
+        FAKULTET
+        */
 
         public async Task<List<Fakultet>> GetInformtionAboutFakultet()
         {
@@ -179,6 +181,61 @@ namespace RestApiTemplate.BussinesLogic
             return response;
         }
 
+
+
+        /*
+         MESTO
+         */
+
+        public async Task<CommandResponse<Mesto>> InsertNewMesto(Mesto mesto)
+        {
+            CommandResponse<Mesto> response = new CommandResponse<Mesto>(200, null, null);
+
+
+            try
+            {
+                if (mesto != null && mesto.PostanskiBroj!=0)
+                {
+                    await _dbContext.Mesto.AddAsync(mesto);
+                    await _dbContext.SaveChangesAsync();
+                    response.Body = mesto;
+                    response.Message = "Uspesno dodato mesto";
+
+
+                }
+                else
+                {
+                    response.Message = "Request nije validan";
+                    response.Body = mesto;
+                    response.StatusCode = 500;  
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Desila se greska u metodi InsertNewMesto {@error}", ex.StackTrace);
+                response.StatusCode = 500;
+                response.Message = "Desila se greska u metodi InsertNewMesto";
+                response.Body = null;
+            }
+
+            return response;
+        }
+        public async Task<List< Mesto>> GetAllMesta()
+        {
+            List<Mesto> mesta = null;
+            try
+            {
+                 mesta = _dbContext.Mesto.ToList();
+                _logger.LogInformation("Response metode GetAllMesta {@fakultet}", mesta);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Desila se greska pri izvrsavanju metode GetAllMesta {@error}", ex.StackTrace);
+            }
+            return mesta;
+        }
 
     }
 }

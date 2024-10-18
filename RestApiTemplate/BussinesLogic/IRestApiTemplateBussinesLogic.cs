@@ -12,5 +12,10 @@ namespace RestApiTemplate.BussinesLogic.Interface
         Task<CommandResponse<Fakultet>> InsertNewFakultet(AddNewFakultet fakultet);
         Task<CommandResponse<Fakultet>> DeleteFakultetById(long id);
         Task<CommandResponse<Fakultet>> UpdateFakultet(long id, UpdateFakultet fakultet);
+
+
+        Task<List<Mesto>> GetAllMesta();
+        Task<CommandResponse<Mesto>> InsertNewMesto(Mesto mesto);
+
     }
 }
