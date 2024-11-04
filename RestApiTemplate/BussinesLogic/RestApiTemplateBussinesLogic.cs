@@ -4,8 +4,13 @@ using RestApiTemplate.BussinesLogic.Interface;
 using RestApiTemplate.CommandResponse;
 using RestApiTemplate.Controllers;
 using RestApiTemplate.Database;
+using RestApiTemplate.Database.SqlQuery;
 using RestApiTemplate.Models.Domain;
 using RestApiTemplate.Models.DTO;
+using System.Reflection.Metadata;
+using RestApiTemplate.Database.SqlQuery;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 
 namespace RestApiTemplate.BussinesLogic
 {
@@ -14,20 +19,22 @@ namespace RestApiTemplate.BussinesLogic
         private readonly RestApiTemplateDbContext _dbContext;
         private readonly ILogger<FakultetController> _logger;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configration;
 
 
-        public RestApiTemplateBussinesLogic(RestApiTemplateDbContext dbContext, ILogger<FakultetController> logger, IMapper mapper)
+        public RestApiTemplateBussinesLogic(RestApiTemplateDbContext dbContext, ILogger<FakultetController> logger, IMapper mapper, IConfiguration configration)
         {
             _dbContext = dbContext;
             _logger = logger;
             _mapper = mapper;
+            _configration = configration;
         }
 
-       /**
-        FAKULTET
-        */
+        /**
+         FAKULTET
+         */
 
-        public async Task<List<Fakultet>> GetInformtionAboutFakultet()
+        public async Task<List<Fakultet>> GetAllFaculties()
         {
             List<Fakultet> fakultets = null;
             try
@@ -81,24 +88,43 @@ namespace RestApiTemplate.BussinesLogic
 
             try
             {
-                SqlQueryLoader loader = new SqlQueryLoader("C:\\Users\\ndukic\\source\\repos\\RestApiTemplate\\RestApiTemplate\\Database\\SqlQueryDefinition.json");
+                SqlQueryBuilder loader = new SqlQueryBuilder(_configration);
                 var sqlDefinitions = loader.LoadSqlDefinition();
-                var commands = sqlDefinitions.Commands["SelectFakultetById"];
 
-               // await _dbContext.Database.ExecuteSqlAsync(_);
-                    await _dbContext.SaveChangesAsync();
-                    //response.Body = newFakultet;
-                    response.Message = "Uspesno dodat fakultet";
+                if(sqlDefinitions.TryGetValue("SelectFakultetById", out SqlCommandDefinition sqlQuery))
+{
+                    var parameters = new List<Database.SqlQuery.Parameter>
+                    {
+                        new Database.SqlQuery.Parameter("@fakultetId", 1, id)
+                    };
 
-
+                    string sqlValue = loader.CreateSqlQuery(sqlQuery, parameters);
                 
+
+
+
+                var fakultet =  _dbContext.Fakultet.FromSqlRaw(sqlValue).FirstOrDefault();
+
+                if (fakultet == null)
+                {
+                    response.Message = "Ne postoji fakultet za zadati ID";
+                    response.Body = fakultet;
+                }
+                else
+                {
+                    response.Message = "Fakulte pronadjen";
+                    response.Body = fakultet;
+                }
+
+                }
+
             }
             catch (Exception ex)
             {
 
-                _logger.LogError("Desila se greska u metodi InsertNewFakultet {@error}", ex.StackTrace);
+                _logger.LogError("Desila se greska u metodi GetFakultetById {@error}", ex.StackTrace);
                 response.StatusCode = 500;
-                response.Message = "Desila se greska u metodi InsertNewFakultet";
+                response.Message = "Desila se greska u metodi GetFakultetById";
                 response.Body = null;
             }
 
@@ -235,6 +261,57 @@ namespace RestApiTemplate.BussinesLogic
                 _logger.LogError("Desila se greska pri izvrsavanju metode GetAllMesta {@error}", ex.StackTrace);
             }
             return mesta;
+        }
+
+        public async Task<CommandResponse<Mesto>> GetMestoByName(string name)
+        {
+            CommandResponse<Mesto> response = new CommandResponse<Mesto>(200, null, null);
+            try
+            {
+
+
+                SqlQueryBuilder loader = new SqlQueryBuilder(_configration);
+                var sqlDefinitions = loader.LoadSqlDefinition();
+
+                if (sqlDefinitions.TryGetValue("SelectMestotByName", out SqlCommandDefinition sqlQuery))
+                {
+                    var parameters = new List<Database.SqlQuery.Parameter>
+                    {
+                        new Database.SqlQuery.Parameter("@nazivMesta", 2, name)
+                    };
+
+                    string sqlValue = loader.CreateSqlQuery(sqlQuery, parameters);
+
+
+                    
+
+                var mesto = _dbContext.Mesto.FromSqlRaw(sqlValue).FirstOrDefault();
+
+                if (mesto != null)
+                {
+                    response.Message = "Mesto uspesno pronadjeno";
+                    response.Body = mesto;
+                    response.StatusCode = 200;
+                }
+                else
+                {
+                    response.Message = "Ne postoji mesto za zadatim nazivom";
+                    response.Body = null;
+                    response.StatusCode = 500;
+                }
+            }
+            }
+
+            catch (Exception ex)
+            {
+
+                _logger.LogError("Desila se greska u metodi GetMestoByName {@error}", ex.StackTrace);
+                response.StatusCode = 500;
+                response.Message = "Desila se greska u metodi GetMestoByName";
+                response.Body = null;
+                return response;
+            }
+            return response;
         }
 
     }

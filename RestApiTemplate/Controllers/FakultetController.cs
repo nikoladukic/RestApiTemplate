@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RestApiTemplate.BussinesLogic.Interface;
 using RestApiTemplate.Models.Domain;
 using RestApiTemplate.Models.DTO;
+using System.ComponentModel;
 
 namespace RestApiTemplate.Controllers
 {
@@ -20,16 +21,25 @@ namespace RestApiTemplate.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetFakultet()
+        [HttpGet("getAllFaculties",Name ="GetAllFaculties")]
+        public async Task<IActionResult> GetAll()
         {
 
-            var fakulteti = await _apiTemplateBussinesLogic.GetInformtionAboutFakultet();
+            var fakulteti = await _apiTemplateBussinesLogic.GetAllFaculties();
+            return Ok(fakulteti);
+
+        }
+        
+        [HttpGet("getFacultyById/{id}", Name = "GetFacultyById")]
+        public async Task<IActionResult> GetFacultyById(long id)
+        {
+
+            var fakulteti = await _apiTemplateBussinesLogic.GetFakultetById(id);
             return Ok(fakulteti);
 
         }
 
-        [HttpPost]
+        [HttpPost("addNewFaculty",Name = "AddNewFaculty")]
         public async Task<IActionResult> InsertNewFakultet([FromBody] AddNewFakultet fakultet)
         {
             var response = await _apiTemplateBussinesLogic.InsertNewFakultet(fakultet);
@@ -39,7 +49,7 @@ namespace RestApiTemplate.Controllers
                 return StatusCode(response.StatusCode, response.Message);
         }
 
-        [HttpDelete] 
+        [HttpDelete("deleteFaculty", Name = "DeleteFaculty")] 
         public async Task<IActionResult> DeleteFakultet([FromQuery] long id)
         {
             var response = await _apiTemplateBussinesLogic.DeleteFakultetById(id);
@@ -49,7 +59,7 @@ namespace RestApiTemplate.Controllers
                 return StatusCode(response.StatusCode, response.Message);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("updateFaculty/{id}", Name = "UpdateFaculty")]
         public async Task<IActionResult> UpdateFakultet(long id,[FromBody] UpdateFakultet fakultet)
         {
             var response = await _apiTemplateBussinesLogic.UpdateFakultet(id,fakultet);
@@ -59,5 +69,6 @@ namespace RestApiTemplate.Controllers
                 return StatusCode(response.StatusCode, response.Message);
         }
 
+        
     }
 }

@@ -18,7 +18,7 @@ namespace RestApiTemplate.Controllers
             _apiTemplateBussinesLogic = apiTemplateBussinesLogic;
             _logger = logger;
         }
-        [HttpGet]
+        [HttpGet("getAllPlaces",Name ="GetAllPlaces")]
         public async Task<IActionResult> GetAllMesta()
         {
 
@@ -27,7 +27,7 @@ namespace RestApiTemplate.Controllers
 
         }
 
-        [HttpPost]
+        [HttpPost("addNewPlace",Name ="AddNewPlace")]
         public async Task<IActionResult> InsertNewMesto([FromBody] Mesto mesto)
         {
             var response = await _apiTemplateBussinesLogic.InsertNewMesto(mesto);
@@ -36,5 +36,15 @@ namespace RestApiTemplate.Controllers
             else
                 return StatusCode(response.StatusCode, response.Message);
         }
+
+        [HttpGet("getPlaceByName/{name}", Name = "GetPlaceByName")]
+        public async Task<IActionResult> GetAllMesta(string name)
+        {
+
+            var mesta = await _apiTemplateBussinesLogic.GetMestoByName(name);
+            return Ok(mesta);
+
+        }
+
     }
 }

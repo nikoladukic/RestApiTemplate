@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using RestApiTemplate.Database.SqlQuery;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IRestApiTemplateBussinesLogic, RestApiTemplateBussinesLogic>();
+builder.Services.AddTransient<SqlQueryBuilder>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

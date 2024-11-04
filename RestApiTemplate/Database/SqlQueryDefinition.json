@@ -10,5 +10,17 @@
     ]
 
 
+  },
+  "SelectMestotByName": {
+    "CommandText": "select * from Mesto where Naziv = @nazivMesta",
+    "CommandType": 2,
+    "CommandTimeout": 30,
+    "Parameters": [
+      {
+        "Name": "@nazivMesta"
+      }
+    ]
+
+
   }
 }
