@@ -7,9 +7,6 @@ using RestApiTemplate.Database;
 using RestApiTemplate.Database.SqlQuery;
 using RestApiTemplate.Models.Domain;
 using RestApiTemplate.Models.DTO;
-using System.Reflection.Metadata;
-using RestApiTemplate.Database.SqlQuery;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace RestApiTemplate.BussinesLogic
